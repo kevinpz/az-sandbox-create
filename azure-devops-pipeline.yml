@@ -91,7 +91,7 @@ stages:
       # Apply Terraform
       - task: TerraformCLI@0
         displayName: Terraform apply subscription
-        condition: not(eq(variables.enrollment_account_name, 'demo')))
+        condition: not(eq(variables.enrollment_account_name, 'demo'))
         inputs:
           workingDirectory: az-sandbox-create/terraform_subscription
           command: apply
@@ -103,7 +103,7 @@ stages:
       # Get the subscription ID
       - task: TerraformCLI@0
         displayName: Terraform output subscription
-        condition: not(eq(variables.enrollment_account_name, 'demo')))
+        condition: not(eq(variables.enrollment_account_name, 'demo'))
         inputs:
           workingDirectory: az-sandbox-create/terraform_subscription
           command: output
@@ -111,18 +111,10 @@ stages:
       # Get the subscription ID (test purpose)
       - task: Bash@3
         displayName: Set subscription ID
-        condition: eq(variables.enrollment_account_name, 'demo'))
+        condition: eq(variables.enrollment_account_name, 'demo')
         inputs:
           targetType: 'inline'
           script: echo "##vso[task.setvariable variable=TF_OUT_SUBSCRIPTION_ID;isOutput=truee]b34b291e-89b2-4d63-9f9c-1ac3e8f43b4f" 
-      
-      # Init Terraform backend and download providers
-      - task: TerraformCLI@0
-        displayName: Get subscription
-        condition: not($(enrollment_account_name))
-        inputs:
-          workingDirectory: az-sandbox-create/terraform_subscription
-          command: output
 
       # Init Terraform for the resources
       - task: TerraformCLI@0
