@@ -75,7 +75,7 @@ stages:
       # Init Terraform
       - task: TerraformCLI@0
         displayName: Terraform init subscription
-        condition: not(eq(variables.enrollment_account_name, 'demo')))
+        condition: not(eq(variables.enrollment_account_name, 'demo'))
         inputs:
           workingDirectory: az-sandbox-create/terraform_subscription
           command: init
