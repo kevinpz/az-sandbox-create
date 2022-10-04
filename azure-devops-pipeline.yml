@@ -64,7 +64,7 @@ stages:
     steps:
       # Checkout the repositories
       - checkout: self
-      - checkout: az-packer-pipeline-template
+      - checkout: az-terraform-module
 
       # Install Terraform
       - task: TerraformInstaller@0
