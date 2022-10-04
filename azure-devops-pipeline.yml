@@ -82,8 +82,8 @@ stages:
           backendType: azurerm
           backendServiceArm: '$(sc_name)'
           backendAzureRmSubscriptionId: '$(backend_subscription_id)'
-          backendAzureRmResourceGroupName: '$(sc_name)'
-          backendAzureRmResourceGroupLocation: '$(stg_rg_name)'
+          backendAzureRmResourceGroupName: '$(stg_rg_name)'
+          backendAzureRmResourceGroupLocation: '$(location)'
           backendAzureRmStorageAccountName: '$(stg_name)'
           backendAzureRmContainerName: '$(stg_container_name)'
           backendAzureRmKey: '$(System.TeamProject)/$(Build.Repository.Name)/$(project_name)/subscription.tfstate'
@@ -125,8 +125,8 @@ stages:
           backendType: azurerm
           backendServiceArm: '$(sc_name)'
           backendAzureRmSubscriptionId: '$(backend_subscription_id)'
-          backendAzureRmResourceGroupName: '$(sc_name)'
-          backendAzureRmResourceGroupLocation: '$(stg_rg_name)'
+          backendAzureRmResourceGroupName: '$(stg_rg_name)'
+          backendAzureRmResourceGroupLocation: '$(location)'
           backendAzureRmStorageAccountName: '$(stg_name)'
           backendAzureRmContainerName: '$(stg_container_name)'
           backendAzureRmKey: '$(System.TeamProject)/$(Build.Repository.Name)/$(project_name)/resources.tfstate'
