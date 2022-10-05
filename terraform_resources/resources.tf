@@ -21,7 +21,7 @@ resource "azurerm_role_assignment" "builder" {
 
 # Create the keyvault
 module "keyvault" {
-  source           = "./az-terraform-module/keyvault"
+  source           = "../az-terraform-module/keyvault"
   location         = azurerm_resource_group.rg_sb.location
   rg_name          = azurerm_resource_group.rg_sb.name
   principal_id     = data.azuread_user.user.object_id
@@ -44,7 +44,7 @@ resource "azurerm_key_vault_secret" "example" {
 
 # Create a vnet
 module "vnet" {
-  source           = "./az-terraform-module/vnet"
+  source           = "../az-terraform-module/vnet"
   location         = azurerm_resource_group.rg_sb.location
   rg_name          = azurerm_resource_group.rg_sb.name
   project_name     = var.project_name
@@ -52,7 +52,7 @@ module "vnet" {
 
 # Create a vm-linux
 module "vm_linux" {
-  source           = "./az-terraform-module/vm-linux"
+  source           = "../az-terraform-module/vm-linux"
   count            = contains(var.modules_list, "vm-linux") ? 1 : 0
   location         = azurerm_resource_group.rg_sb.location
   rg_name          = azurerm_resource_group.rg_sb.name
