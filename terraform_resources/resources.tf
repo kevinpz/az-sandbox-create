@@ -37,7 +37,7 @@ resource "random_password" "password" {
 # Create a secret for the VM
 resource "azurerm_key_vault_secret" "vm_password" {
   name          = "vm-password"
-  value         = random_password.password
+  value         = random_password.password.result
   key_vault_id  = module.keyvault.keyvault_id
 }
 
@@ -57,5 +57,5 @@ module "vm_linux" {
   rg_name          = azurerm_resource_group.rg_sb.name
   subnet_id        = module.vnet.subnet_data_id
   project_name     = var.project_name
-  vm_password      = random_password.password
+  vm_password      = random_password.password.result
 }
