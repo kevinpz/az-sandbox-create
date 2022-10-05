@@ -59,3 +59,14 @@ module "vm_linux" {
   project_name     = var.project_name
   vm_password      = random_password.password.result
 }
+
+# Create a vm-windows
+module "vm_windows" {
+  source           = "../../az-terraform-module/vm-windows"
+  count            = contains(var.modules_list, "vm-windows") ? 1 : 0
+  location         = azurerm_resource_group.rg_sb.location
+  rg_name          = azurerm_resource_group.rg_sb.name
+  subnet_id        = module.vnet.subnet_data_id
+  project_name     = var.project_name
+  vm_password      = random_password.password.result
+}
