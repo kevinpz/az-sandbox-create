@@ -12,3 +12,8 @@ variable "owner_name" {
 variable "project_name" {
   type = string
 }
+
+# List of modules to use
+variable "modules_list" {
+  type = list
+}

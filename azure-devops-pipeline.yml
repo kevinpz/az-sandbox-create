@@ -52,7 +52,7 @@ parameters:
   default: $(project_name)
 # Name of the project
 - name: modules_list
-  type: string
+  type: object
   default: $(modules_list)
 
 # Pipeline deployment

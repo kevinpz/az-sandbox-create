@@ -12,9 +12,6 @@ data "azuread_user" "user" {
 # Get the current subscription
 data "azurerm_subscription" "sb" {}
 
-# Get the current config
-data "azurerm_client_config" "current" {}
-
 # Assign the role to the user
 resource "azurerm_role_assignment" "builder" {
   scope                = data.azurerm_subscription.sb.id
@@ -22,22 +19,44 @@ resource "azurerm_role_assignment" "builder" {
   principal_id         = data.azuread_user.user.object_id
 }
 
-# Create a keyvault
-resource "azurerm_key_vault" "kv" {
-  name                        = "kvkpz${var.project_name}"
-  location                    = azurerm_resource_group.rg_sb.location
-  resource_group_name         = azurerm_resource_group.rg_sb.name
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  enable_rbac_authorization   = true
-  soft_delete_retention_days  = 7
-  purge_protection_enabled    = false
-
-  sku_name = "standard"
+# Create the keyvault
+module "keyvault" {
+  source           = "./az-terraform-module/keyvault"
+  location         = azurerm_resource_group.rg_sb.location
+  rg_name          = azurerm_resource_group.rg_sb.name
+  principal_id     = data.azuread_user.user.object_id
+  project_name     = var.project_name
 }
 
-# Give to the user the permissions on the keyvault
-resource "azurerm_role_assignment" "ra-kv" {
-  scope                = azurerm_key_vault.kv.id
-  role_definition_name = "Key Vault Administrator"
-  principal_id         = data.azuread_user.user.object_id
+# Generate a password
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+}
+
+# Create a secret for the VM
+resource "azurerm_key_vault_secret" "example" {
+  name          = "vm-password"
+  value         = random_password.password
+  key_vault_id  = module.keyvault.output.keyvault_id
+  project_name  = var.project_name
+}
+
+# Create a vnet
+module "vnet" {
+  source           = "./az-terraform-module/vnet"
+  location         = azurerm_resource_group.rg_sb.location
+  rg_name          = azurerm_resource_group.rg_sb.name
+  project_name     = var.project_name
+}
+
+# Create a vm-linux
+module "vm_linux" {
+  source           = "./az-terraform-module/vm-linux"
+  count            = contains(var.modules_list, "vm-linux") ? 1 : 0
+  location         = azurerm_resource_group.rg_sb.location
+  rg_name          = azurerm_resource_group.rg_sb.name
+  subnet_id        = module.vnet.output.subnet_data_id
+  project_name     = var.project_name
+  vm_password      = random_password.password
 }
