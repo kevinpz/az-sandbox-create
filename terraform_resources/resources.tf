@@ -38,7 +38,7 @@ resource "random_password" "password" {
 resource "azurerm_key_vault_secret" "example" {
   name          = "vm-password"
   value         = random_password.password
-  key_vault_id  = module.keyvault.output.keyvault_id
+  key_vault_id  = module.keyvault.keyvault_id
   project_name  = var.project_name
 }
 
@@ -56,7 +56,7 @@ module "vm_linux" {
   count            = contains(var.modules_list, "vm-linux") ? 1 : 0
   location         = azurerm_resource_group.rg_sb.location
   rg_name          = azurerm_resource_group.rg_sb.name
-  subnet_id        = module.vnet.output.subnet_data_id
+  subnet_id        = module.vnet.subnet_data_id
   project_name     = var.project_name
   vm_password      = random_password.password
 }
