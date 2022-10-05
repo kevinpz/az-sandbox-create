@@ -35,11 +35,10 @@ resource "random_password" "password" {
 }
 
 # Create a secret for the VM
-resource "azurerm_key_vault_secret" "example" {
+resource "azurerm_key_vault_secret" "vm_password" {
   name          = "vm-password"
   value         = random_password.password
   key_vault_id  = module.keyvault.keyvault_id
-  project_name  = var.project_name
 }
 
 # Create a vnet
